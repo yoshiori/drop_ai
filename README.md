@@ -80,6 +80,31 @@ npm run pack
 
 Built packages will be available in the `release/` directory.
 
+## Automated Releases (GitHub Actions)
+
+### 🚀 Auto Release
+Automatically creates releases when code is pushed to main branch:
+
+**Version bumping based on commit message:**
+- Contains `major` or `breaking` → **major** version bump (1.0.0 → 2.0.0)
+- Contains `feat` or `feature` or `minor` → **minor** version bump (1.0.0 → 1.1.0)
+- Everything else → **patch** version bump (1.0.0 → 1.0.1)
+
+**Examples:**
+```bash
+git commit -m "feat: add custom shortcut configuration"     # → v1.1.0
+git commit -m "fix session persistence issue"              # → v1.0.1
+git commit -m "major: redesign UI with breaking changes"   # → v2.0.0
+git commit -m "[skip ci] update documentation"             # → no release
+```
+
+**Skip release:** Add `[skip ci]` or `[skip release]` to commit message
+
+### Manual Version Override
+You can also manually trigger a release with specific version type:
+- Go to Actions tab → "Auto Release" → "Run workflow"
+- Choose version type: patch, minor, or major
+
 ## Installation
 
 ### From Pre-built Packages
