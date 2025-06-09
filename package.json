@@ -13,6 +13,8 @@
     "build-renderer": "vite build",
     "build-main": "tsc --project tsconfig.main.json",
     "clean": "rm -rf dist",
+    "pack": "electron-builder",
+    "dist": "electron-builder --publish=never",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -30,6 +32,7 @@
     "@vitejs/plugin-react": "^4.5.1",
     "concurrently": "^9.1.2",
     "electron": "^36.4.0",
+    "electron-builder": "^26.0.12",
     "electron-vite": "^3.1.0",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
@@ -38,5 +41,20 @@
   "dependencies": {
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
+  },
+  "build": {
+    "appId": "com.yoshiori.drop_ai",
+    "productName": "Gemini AI Desktop",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "node_modules/**/*"
+    ],
+    "linux": {
+      "target": "AppImage",
+      "category": "Utility"
+    }
   }
 }

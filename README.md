@@ -1,13 +1,16 @@
-# Gemini AI Desktop App
+# Gemini AI Desktop App (Top-Down Terminal Style)
 
-A modern desktop application built with Electron, TypeScript, React, and Vite that provides native app experience for Gemini AI (https://gemini.google.com/app).
+A modern desktop application built with Electron, TypeScript, React, and Vite that provides a top-down terminal style experience for Gemini AI (https://gemini.google.com/app).
 
 ## Features
 
-- Run Gemini AI web interface as a desktop application
-- Native menu bar integration
-- Keyboard shortcuts support
-- Proper external link handling
+- **Top-Down Terminal Style**: Shows/hides with global shortcut like Guake or Yakuake
+- **Global Shortcut**: Press `F12` to toggle window visibility
+- **Auto-Hide**: Automatically hides when focus is lost
+- **Slide Animation**: Smooth slide-down/up animations
+- **Always on Top**: Window stays above other applications
+- **Frameless**: Clean, minimal window design
+- **Background Operation**: Runs in background without taskbar presence
 - **Vite** for fast builds and HMR (Hot Module Replacement)
 
 ## Requirements
@@ -62,8 +65,10 @@ Use the Command Palette (`Ctrl+Shift+P`) and select `Tasks: Run Task` to execute
 
 ## Keyboard Shortcuts
 
+- `F12`: Toggle window visibility (main shortcut)
 - `Ctrl/Cmd + N`: New chat
 - `Ctrl/Cmd + R`: Reload
+- `Escape`: Hide window
 - `Ctrl/Cmd + Q`: Quit application
 
 ## Project Structure
