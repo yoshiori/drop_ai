@@ -1,4 +1,4 @@
-# Gemini AI Desktop App (Top-Down Terminal Style)
+# DropAI - AI Desktop Assistant (Top-Down Terminal Style)
 
 A modern desktop application built with Electron, TypeScript, React, and Vite that provides a top-down terminal style experience for Gemini AI (https://gemini.google.com/app).
 

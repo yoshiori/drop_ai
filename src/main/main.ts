@@ -28,7 +28,7 @@ function createWindow(): void {
     skipTaskbar: true, // Don't show in taskbar
     resizable: false, // Disable resizing
     movable: false, // Disable moving
-    title: 'Gemini AI Desktop',
+    title: 'DropAI - AI Desktop Assistant',
     show: false, // Don't show until ready-to-show
     // transparent: true, // Make window transparent - disabled for compatibility
     backgroundColor: '#1a1a1a', // Dark background instead of transparent

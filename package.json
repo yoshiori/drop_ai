@@ -1,7 +1,7 @@
 {
   "name": "drop_ai",
   "version": "1.0.0",
-  "description": "Gemini AI Desktop Application",
+  "description": "DropAI - AI Desktop Assistant with Top-Down Terminal Style",
   "main": "dist/main/main.js",
   "scripts": {
     "build": "vite build && tsc --project tsconfig.main.json",
