@@ -1,0 +1,42 @@
+{
+  "name": "drop_ai",
+  "version": "1.0.0",
+  "description": "Gemini AI Desktop Application",
+  "main": "dist/main/main.js",
+  "scripts": {
+    "build": "vite build && tsc --project tsconfig.main.json",
+    "start": "npm run build && electron .",
+    "dev": "npm run build && NODE_ENV=development electron .",
+    "dev:concurrent": "concurrently \"npm run dev:renderer\" \"wait-on http://localhost:3000 && npm run dev:electron\"",
+    "dev:electron": "npm run build-main && NODE_ENV=development electron .",
+    "dev:renderer": "vite",
+    "build-renderer": "vite build",
+    "build-main": "tsc --project tsconfig.main.json",
+    "clean": "rm -rf dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "electron",
+    "gemini",
+    "ai",
+    "desktop"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^22.15.30",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.5.1",
+    "concurrently": "^9.1.2",
+    "electron": "^36.4.0",
+    "electron-vite": "^3.1.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "wait-on": "^8.0.3"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  }
+}
