@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, shell, globalShortcut, Tray, screen } from 'electron';
+import { app, BrowserWindow, Menu, shell, globalShortcut, Tray, screen, session } from 'electron';
 import * as path from 'path';
 
 let mainWindow: BrowserWindow;
@@ -7,6 +7,9 @@ let tray: Tray | null = null;
 
 function createWindow(): void {
   const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
+
+  // Create persistent session for maintaining login state
+  const persistentSession = session.fromPartition('persist:gemini-session');
 
   // Create the browser window with top-down terminal style
   mainWindow = new BrowserWindow({
@@ -18,6 +21,7 @@ function createWindow(): void {
       nodeIntegration: false,
       contextIsolation: true,
       webSecurity: false, // Allow loading external content
+      session: persistentSession, // Use persistent session
     },
     frame: false, // Frameless window
     alwaysOnTop: true, // Always on top
