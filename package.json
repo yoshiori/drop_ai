@@ -13,17 +13,27 @@
     "build-renderer": "vite build",
     "build-main": "tsc --project tsconfig.main.json",
     "clean": "rm -rf dist",
-    "pack": "electron-builder",
-    "dist": "electron-builder --publish=never",
+    "pack": "npm run build && electron-builder --dir",
+    "dist": "npm run build && electron-builder",
+    "dist:linux": "npm run build && electron-builder --linux",
+    "dist:linux-portable": "npm run build && electron-builder --linux appimage deb",
+    "dist:win": "npm run build && electron-builder --win",
+    "dist:mac": "npm run build && electron-builder --mac",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "electron",
-    "gemini",
     "ai",
-    "desktop"
+    "desktop",
+    "assistant",
+    "dropai",
+    "terminal",
+    "productivity"
   ],
-  "author": "",
+  "author": {
+    "name": "Yoshiori",
+    "email": "yoshiori@example.com"
+  },
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^22.15.30",
@@ -43,18 +53,69 @@
     "react-dom": "^19.1.0"
   },
   "build": {
-    "appId": "com.yoshiori.drop_ai",
-    "productName": "Gemini AI Desktop",
+    "appId": "com.yoshiori.dropai",
+    "productName": "DropAI",
     "directories": {
       "output": "release"
     },
     "files": [
       "dist/**/*",
-      "node_modules/**/*"
+      "node_modules/**/*",
+      "package.json"
     ],
+    "extraMetadata": {
+      "main": "dist/main/main.js"
+    },
     "linux": {
-      "target": "AppImage",
-      "category": "Utility"
+      "target": [
+        {
+          "target": "AppImage",
+          "arch": ["x64"]
+        },
+        {
+          "target": "deb",
+          "arch": ["x64"]
+        },
+        {
+          "target": "rpm",
+          "arch": ["x64"]
+        }
+      ],
+      "category": "Utility",
+      "description": "DropAI - AI Desktop Assistant with Top-Down Terminal Style"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        },
+        {
+          "target": "zip",
+          "arch": ["x64", "arm64"]
+        }
+      ],
+      "icon": "build/icon.icns",
+      "category": "public.app-category.productivity"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
     }
   }
 }

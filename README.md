@@ -11,6 +11,7 @@ A modern desktop application built with Electron, TypeScript, React, and Vite th
 - **Always on Top**: Window stays above other applications
 - **Frameless**: Clean, minimal window design
 - **Background Operation**: Runs in background without taskbar presence
+- **Session Persistence**: Maintains login state across app restarts
 - **Vite** for fast builds and HMR (Hot Module Replacement)
 
 ## Requirements
@@ -51,6 +52,65 @@ npm start
 
 # Clean build files
 npm run clean
+```
+
+## Building for Distribution
+
+### Create Installable Packages
+
+```bash
+# Build for current platform
+npm run dist
+
+# Build for specific platforms
+npm run dist:linux           # AppImage, deb, rpm (requires rpmbuild)
+npm run dist:linux-portable  # AppImage, deb only (recommended)
+npm run dist:win             # NSIS installer, portable
+npm run dist:mac             # DMG, zip
+
+# Create unpacked directory (for testing)
+npm run pack
+```
+
+### Supported Package Formats
+
+- **Linux**: AppImage (portable), DEB (Debian/Ubuntu), RPM (RedHat/Fedora)
+- **Windows**: NSIS Installer, Portable executable
+- **macOS**: DMG, ZIP
+
+Built packages will be available in the `release/` directory.
+
+## Installation
+
+### From Pre-built Packages
+
+1. Download the appropriate package from the releases
+2. **Linux AppImage**: Make executable and run
+   ```bash
+   chmod +x DropAI-*.AppImage
+   ./DropAI-*.AppImage
+   ```
+3. **Linux DEB**: Install with package manager
+   ```bash
+   sudo dpkg -i DropAI-*.deb
+   ```
+4. **Linux RPM**: Install with package manager
+   ```bash
+   sudo rpm -i DropAI-*.rpm
+   ```
+
+### From Source
+
+```bash
+# Clone repository
+git clone https://github.com/yoshiori/drop_ai.git
+cd drop_ai
+
+# Install dependencies
+npm install
+
+# Build and run
+npm start
 ```
 
 ### VS Code Tasks
