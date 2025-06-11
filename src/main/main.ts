@@ -1,9 +1,14 @@
 import { app, BrowserWindow, Menu, shell, globalShortcut, Tray, screen, session } from 'electron';
 import * as path from 'path';
 
-let mainWindow: BrowserWindow;
-let isWindowVisible = false;
+export let mainWindow: BrowserWindow; // Export mainWindow
+export let isWindowVisible = false; // Export isWindowVisible
 let tray: Tray | null = null;
+
+// Export a setter for isWindowVisible for testing purposes
+export function __setIsWindowVisible(value: boolean): void {
+  isWindowVisible = value;
+}
 
 function createWindow(): void {
   const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
@@ -89,7 +94,7 @@ function createWindow(): void {
 }
 
 // Function to show window with slide-down animation
-function showWindow(): void {
+export function showWindow(): void { // Ensure this is exported
   if (!mainWindow || isWindowVisible || mainWindow.isDestroyed()) return;
 
   const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
@@ -133,7 +138,7 @@ function showWindow(): void {
 }
 
 // Function to hide window with slide-up animation
-function hideWindow(): void {
+export function hideWindow(): void { // Ensure this is exported
   if (!mainWindow || !isWindowVisible || mainWindow.isDestroyed()) return;
 
   const { height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
@@ -181,7 +186,7 @@ function hideWindow(): void {
 }
 
 // Function to toggle window visibility
-function toggleWindow(): void {
+export function toggleWindow(): void { // Ensure this is exported
   if (isWindowVisible) {
     hideWindow();
   } else {
@@ -197,7 +202,7 @@ function createTray(): void {
   // tray.on('click', toggleWindow);
 }
 
-function createMenu(): void {
+export function createMenu(): void { // Ensure this is exported
   const template: Electron.MenuItemConstructorOptions[] = [
     {
       label: 'File',
@@ -299,22 +304,27 @@ function createMenu(): void {
 }
 
 // This method will be called when Electron has finished initialization
-app.whenReady().then(() => {
-  createWindow();
+export function initializeApp(): void { // Ensure this is exported
+  app.whenReady().then(() => {
+    createWindow();
 
-  // Register global shortcut for toggling window
-  // Using F12 as it's more reliable across different systems
-  const registered = globalShortcut.register('F12', () => {
-    toggleWindow();
+    // Register global shortcut for toggling window
+    // Using F12 as it's more reliable across different systems
+    const registered = globalShortcut.register('F12', toggleWindow); // Pass toggleWindow directly
+
+    if (!registered) {
+      console.log('Failed to register global shortcut F12');
+    }
+
+    // Check if shortcut is registered
+    console.log('Global shortcut F12 registered:', globalShortcut.isRegistered('F12'));
   });
+}
 
-  if (!registered) {
-    console.log('Failed to register global shortcut F12');
-  }
-
-  // Check if shortcut is registered
-  console.log('Global shortcut F12 registered:', globalShortcut.isRegistered('F12'));
-});
+// Call initializeApp if not in test environment
+if (process.env.NODE_ENV !== 'test') {
+  initializeApp();
+}
 
 // Quit when all windows are closed, except on macOS
 app.on('window-all-closed', () => {
