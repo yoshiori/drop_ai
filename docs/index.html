@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PyMath - Your Portal to Algorithmic Excellence</title>
+    <title>DropAI - AI Desktop Assistant</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>Welcome to PyMath</h1>
-        <p>Your futuristic solution for advanced mathematical computations</p>
+        <h1>Welcome to DropAI</h1>
+        <p>Your top-down terminal style desktop assistant for Gemini AI.</p>
     </header>
 
     <nav>
@@ -23,50 +23,44 @@
     <main>
         <section id="intro">
             <h2>Introduction</h2>
-            <p>Step into the quantum realm of PyMath, where complex calculations bend to your will. PyMath is a cutting-edge Python library engineered to deliver unparalleled precision and speed for a vast array of mathematical operations. From unraveling the mysteries of prime numbers to charting Fibonacci sequences across cosmic scales, PyMath is your trusted co-pilot in the universe of numbers. Our advanced algorithms are optimized for peak performance, ensuring your computations are not just accurate, but light-years ahead.</p>
+            <p>Engage DropAI, your personal command console for navigating the digital cosmos with Gemini AI. Conceived as a sleek, top-down terminal interface, DropAI materializes on your desktop with a keystroke, ready to channel your queries and commands to the advanced Gemini Pro and Gemini Pro Vision models. It's more than an assistant; it's your direct conduit to AI-powered insights, image analysis, and data synthesis, all wrapped in a customizable, high-performance Electron shell. Features like global visibility toggle, auto-hide, always-on-top, and dynamic theme switching ensure DropAI integrates seamlessly into your digital cockpit, enhancing your workflow with futuristic efficiency.</p>
         </section>
 
         <section id="installation">
             <h2>Installation</h2>
-            <p>To integrate PyMath into your system, ensure you have Python 3.6 or higher. Installation is as simple as synchronizing with our central repository via pip. Open your terminal interface and execute the following command:</p>
+            <p>Deploying DropAI onto your battle station can be achieved through several methods:</p>
+            <h3>Pre-built Packages (Recommended for most operatives)</h3>
+            <p>Download the latest stable binaries from our <a href="https://github.com/yoshiori/drop_ai/releases" target="_blank" style="color: #64ffda;">Releases Bay</a>:</p>
+            <ul>
+                <li><strong>AppImage (Linux):</strong> Download the <code>.AppImage</code> file. Grant it execution permission: <pre><code>chmod +x DropAI-*.AppImage</code></pre> Then, simply run the file.</li>
+                <li><strong>Debian/Ubuntu (.deb):</strong> Download the <code>.deb</code> package and install via: <pre><code>sudo dpkg -i DropAI-*.deb</code></pre></li>
+                <li><strong>Fedora/RHEL (.rpm):</strong> Download the <code>.rpm</code> package and install using: <pre><code>sudo rpm -i DropAI-*.rpm</code></pre></li>
+            </ul>
+            <h3>From Source Code (For developers and space pioneers)</h3>
+            <p>Clone the repository and navigate into the project directory:</p>
             <pre><code>
-# Installation command for PyMath
-pip install pymath-lib # Assuming 'pymath-lib' is the package name on PyPI
+git clone https://github.com/yoshiori/drop_ai.git
+cd drop_ai
             </code></pre>
-            <p>For developmental missions or to contribute to the PyMath continuum, clone our repository from GitHub:
+            <p>Install dependencies and launch the application:</p>
             <pre><code>
-git clone https://github.com/[ACTUAL_ORG_OR_USER]/pymath.git
-cd pymath
-python setup.py install
+npm install
+npm start
             </code></pre>
-            Ensure all dependencies are assimilated by running <code>pip install -r requirements.txt</code> if applicable.
-            </p>
         </section>
 
         <section id="usage">
             <h2>Usage</h2>
-            <p>Engage PyMath's capabilities by importing the desired modules into your Python scripts. Whether you're calculating the factorial of a trans-dimensional integer or finding the greatest common divisor between stellar masses, the syntax is designed for intuitive interaction.</p>
+            <p>Once DropAI is initialized, it lurks silently in the background, ready for your command. Summon or dismiss its interface with a global hotkey:</p>
             <pre><code>
-# Example: Activating PyMath's factorial computation core
-from pymath.lib.math import factorial
-
-# Calculate the factorial of 7 (a mystical number in many galaxies)
-result = factorial(7)
-print(f"The factorial resonance is: {result}") # Output: The factorial resonance is: 5040
-
-# Example: Charting a Fibonacci sequence
-from pymath.lib.math import fibonacci
-
-# Determine the 10th element in a Fibonacci sequence
-fib_number = fibonacci(10)
-print(f"The 10th Fibonacci marker is: {fib_number}") # Output: The 10th Fibonacci marker is: 34
+Press F12 to toggle DropAI window visibility.
             </code></pre>
-            <p>Explore the full spectrum of PyMath's functions by consulting the holographic documentation matrix (coming soon to a nebula near you).</p>
+            <p>DropAI is designed for fluid interaction. Its window can be configured to auto-hide when focus is lost, or pinned to remain always on top of your other applications, ensuring constant access to AI assistance. Configure your Gemini API key upon first launch, and you're ready to interface with the AI. Further commands and interactions are intuitive, displayed within its sleek terminal view. Additional keyboard shortcuts for theme switching (Ctrl+T) and other features are available to streamline your operations.</p>
         </section>
     </main>
 
     <footer>
-        <p>&copy; 2024 The PyMath Collective. Prepare for warp speed!</p>
+        <p>&copy; 2024 yoshiori/drop_ai. Prepare for warp speed!</p>
     </footer>
 </body>
 </html>
