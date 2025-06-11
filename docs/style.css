@@ -1,0 +1,107 @@
+body {
+    font-family: 'Orbitron', sans-serif; /* A futuristic font */
+    background-color: #0a0f1f; /* Deep space blue */
+    color: #c0c0ff; /* Light blue/lavender text */
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+header {
+    background-color: #1a1f33; /* Darker blue for header */
+    color: #64ffda; /* Neon cyan for header text */
+    padding: 2em 0;
+    text-align: center;
+    border-bottom: 3px solid #64ffda; /* Neon cyan border */
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em;
+    letter-spacing: 2px;
+}
+
+header p {
+    font-size: 1.2em;
+}
+
+nav {
+    background-color: #2a2f45; /* Slightly lighter blue for nav */
+    padding: 0.5em 0;
+    text-align: center;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    display: inline-block;
+    margin: 0 1em;
+}
+
+nav ul li a {
+    color: #c0c0ff;
+    text-decoration: none;
+    font-size: 1.1em;
+    padding: 0.5em 1em;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+nav ul li a:hover, nav ul li a:focus {
+    background-color: #64ffda; /* Neon cyan highlight */
+    color: #0a0f1f; /* Deep space blue text on hover */
+}
+
+main {
+    padding: 2em;
+    max-width: 900px;
+    margin: 2em auto;
+    background-color: #11162a; /* Slightly lighter than body for content background */
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(100, 255, 218, 0.5); /* Neon cyan glow */
+}
+
+section {
+    margin-bottom: 2em;
+    padding: 1.5em;
+    background-color: #1a1f33; /* Darker blue for sections */
+    border-left: 5px solid #64ffda; /* Neon cyan accent line */
+    border-radius: 5px;
+}
+
+section h2 {
+    color: #64ffda; /* Neon cyan for section titles */
+    font-size: 2em;
+    margin-top: 0;
+    border-bottom: 1px solid #4a4f63; /* Subtle separator */
+    padding-bottom: 0.5em;
+}
+
+pre {
+    background-color: #050810; /* Very dark blue for code blocks */
+    color: #e0e0e0; /* Light grey for code text */
+    padding: 1em;
+    border-radius: 5px;
+    overflow-x: auto; /* Handle long lines of code */
+    border: 1px solid #2a2f45; /* Border for code blocks */
+}
+
+code {
+    font-family: 'Fira Code', 'Courier New', monospace; /* Monospaced font for code */
+}
+
+footer {
+    text-align: center;
+    padding: 1.5em 0;
+    background-color: #1a1f33; /* Darker blue for footer */
+    color: #c0c0ff;
+    border-top: 1px solid #2a2f45; /* Subtle top border */
+    font-size: 0.9em;
+}
+
+/* Add a Google Font Orbitron if not available locally */
+/* @import rules should be at the top of the file. This line should be moved. */
