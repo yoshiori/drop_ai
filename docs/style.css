@@ -104,4 +104,4 @@ footer {
 }
 
 /* Add a Google Font Orbitron if not available locally */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+/* @import rules should be at the top of the file. This line should be moved. */
