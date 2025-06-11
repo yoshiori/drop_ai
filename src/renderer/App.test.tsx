@@ -1,12 +1,11 @@
-import { render, screen } from '@testing-library/react';
-import { App } from './index'; // Assuming App is exported from index.tsx
 import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { App } from './index'; // Assuming App is a named export from index.tsx
 
-describe('App component', () => {
-  it('renders without crashing', () => {
+describe('App Component', () => {
+  test('renders main heading', () => {
     render(<App />);
-    // Check for a distinctive element from the App component
-    // For example, the main heading:
-    expect(screen.getByText('Gemini AI Desktop')).toBeInTheDocument();
+    const headingElement = screen.getByText(/Gemini AI Desktop/i);
+    expect(headingElement).toBeInTheDocument();
   });
 });
