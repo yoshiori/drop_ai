@@ -45,33 +45,29 @@ describe('TrayManager', () => {
   }
 
   describe('createTray', () => {
-    it('should create a Tray with an icon', () => {
-      const { tm, deps } = createTrayManager();
-      tm.createTray();
+    let tm: ReturnType<typeof createTrayManager>['tm'];
+    let deps: ReturnType<typeof createTrayManager>['deps'];
 
+    beforeEach(() => {
+      ({ tm, deps } = createTrayManager());
+      tm.createTray();
+    });
+
+    it('should create a Tray with an icon', () => {
       expect(deps.nativeImage.createFromPath).toHaveBeenCalled();
       expect(deps.Tray).toHaveBeenCalledWith('mock-icon');
     });
 
     it('should set tooltip to DropAI', () => {
-      const { tm, deps } = createTrayManager();
-      tm.createTray();
-
       expect(deps.mockTray.setToolTip).toHaveBeenCalledWith('DropAI');
     });
 
     it('should set a context menu', () => {
-      const { tm, deps } = createTrayManager();
-      tm.createTray();
-
       expect(deps.Menu.buildFromTemplate).toHaveBeenCalled();
       expect(deps.mockTray.setContextMenu).toHaveBeenCalled();
     });
 
     it('should build context menu with correct items', () => {
-      const { tm, deps } = createTrayManager();
-      tm.createTray();
-
       const template = (deps.Menu.buildFromTemplate as ReturnType<typeof vi.fn>).mock.calls[0][0];
       const labels = template.map((item: { label?: string; type?: string }) => item.label || item.type);
       expect(labels).toEqual(['Toggle Window', 'New Chat', 'separator', 'Quit']);
@@ -79,43 +75,22 @@ describe('TrayManager', () => {
   });
 
   describe('context menu actions', () => {
-    it('should call onToggleWindow when Toggle Window is clicked', () => {
-      const toggleFn = vi.fn();
-      callbacks.toggleWindow = toggleFn;
+    it.each([
+      { label: 'Toggle Window', callbackName: 'toggleWindow' },
+      { label: 'New Chat', callbackName: 'newChat' },
+      { label: 'Quit', callbackName: 'quit' },
+    ])('should call callback for "$label"', ({ label, callbackName }) => {
+      const callbackFn = vi.fn();
+      callbacks[callbackName] = callbackFn;
+
       const { tm, deps } = createTrayManager();
       tm.createTray();
 
       const template = (deps.Menu.buildFromTemplate as ReturnType<typeof vi.fn>).mock.calls[0][0];
-      const toggleItem = template.find((item: { label?: string }) => item.label === 'Toggle Window');
-      toggleItem.click();
+      const menuItem = template.find((item: { label?: string }) => item.label === label);
+      menuItem.click();
 
-      expect(toggleFn).toHaveBeenCalled();
-    });
-
-    it('should call onNewChat when New Chat is clicked', () => {
-      const newChatFn = vi.fn();
-      callbacks.newChat = newChatFn;
-      const { tm, deps } = createTrayManager();
-      tm.createTray();
-
-      const template = (deps.Menu.buildFromTemplate as ReturnType<typeof vi.fn>).mock.calls[0][0];
-      const newChatItem = template.find((item: { label?: string }) => item.label === 'New Chat');
-      newChatItem.click();
-
-      expect(newChatFn).toHaveBeenCalled();
-    });
-
-    it('should call onQuit when Quit is clicked', () => {
-      const quitFn = vi.fn();
-      callbacks.quit = quitFn;
-      const { tm, deps } = createTrayManager();
-      tm.createTray();
-
-      const template = (deps.Menu.buildFromTemplate as ReturnType<typeof vi.fn>).mock.calls[0][0];
-      const quitItem = template.find((item: { label?: string }) => item.label === 'Quit');
-      quitItem.click();
-
-      expect(quitFn).toHaveBeenCalled();
+      expect(callbackFn).toHaveBeenCalled();
     });
   });
 

@@ -8,6 +8,15 @@ import { createWindowOpenHandler } from './windowOpenHandler';
 let windowManager: WindowManager;
 let trayManager: TrayManager;
 
+function handleNewChat(): void {
+  const win = windowManager.getWindow();
+  if (win) {
+    win.loadURL(CLAUDE_URL).catch((error) => {
+      console.error('Failed to load URL for New Chat:', error);
+    });
+  }
+}
+
 function createMenu(): void {
   const template = buildMenuTemplate(process.platform, app.getName());
 
@@ -20,14 +29,7 @@ function createMenu(): void {
           item.click = () => windowManager.toggleWindow();
           break;
         case MENU_IDS.NEW_CHAT:
-          item.click = () => {
-            const win = windowManager.getWindow();
-            if (win) {
-              win.loadURL(CLAUDE_URL).catch((error) => {
-                console.error('Failed to load URL from New Chat menu item:', error);
-              });
-            }
-          };
+          item.click = () => handleNewChat();
           break;
         case MENU_IDS.RELOAD:
           item.click = () => {
@@ -61,14 +63,7 @@ function initialize(): void {
 
     trayManager = new TrayManager({ Tray, Menu, nativeImage }, {
       onToggleWindow: () => windowManager.toggleWindow(),
-      onNewChat: () => {
-        const win = windowManager.getWindow();
-        if (win) {
-          win.loadURL(CLAUDE_URL).catch((error) => {
-            console.error('Failed to load URL from tray New Chat:', error);
-          });
-        }
-      },
+      onNewChat: handleNewChat,
       onQuit: () => app.quit(),
     });
     trayManager.createTray();
