@@ -18,6 +18,8 @@ export interface CreateWindowOptions {
 export class WindowManager {
   private mainWindow: BrowserWindowType | null = null;
   private _isVisible = false;
+  private _isAnimating = false;
+  private currentAnimationInterval: ReturnType<typeof setInterval> | null = null;
   private deps: WindowManagerDeps;
 
   constructor(deps: WindowManagerDeps) {
@@ -38,7 +40,7 @@ export class WindowManager {
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
-        webSecurity: false,
+        webSecurity: true,
         session: persistentSession,
       },
       frame: false,
@@ -63,13 +65,21 @@ export class WindowManager {
       }, 100);
     });
 
+    this.mainWindow.on('closed', () => {
+      this.mainWindow = null;
+      this._isVisible = false;
+      this.cancelAnimation();
+    });
+
     const targetUrl = options.isDevelopment && options.useDevServer ? DEV_SERVER_URL : GEMINI_URL;
 
     this.mainWindow.loadURL(targetUrl).catch((error) => {
       console.error(`Failed to load ${targetUrl}:`, error);
       if (this.mainWindow) {
         const fallbackPath = path.join(__dirname, '../renderer/index.html');
-        this.mainWindow.loadFile(fallbackPath);
+        this.mainWindow.loadFile(fallbackPath).catch((fallbackError) => {
+          console.error(`Failed to load fallback page:`, fallbackError);
+        });
       }
     });
 
@@ -78,7 +88,18 @@ export class WindowManager {
     }
 
     this.mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-      this.deps.shell.openExternal(url);
+      try {
+        const parsedUrl = new URL(url);
+        const allowedProtocols = new Set(['https:', 'http:']);
+
+        if (allowedProtocols.has(parsedUrl.protocol)) {
+          void this.deps.shell.openExternal(url);
+        } else {
+          console.warn(`[security] Blocked attempt to open external URL with disallowed protocol: ${url}`);
+        }
+      } catch (error) {
+        console.warn(`[security] Failed to parse URL for external open: ${url}`, error);
+      }
       return { action: 'deny' };
     });
 
@@ -87,7 +108,9 @@ export class WindowManager {
         console.error(`Failed to load ${validatedURL}: ${errorDescription} (${errorCode})`);
         if (this.mainWindow) {
           const fallbackPath = path.join(__dirname, '../renderer/index.html');
-          this.mainWindow.loadFile(fallbackPath);
+          this.mainWindow.loadFile(fallbackPath).catch((fallbackError) => {
+            console.error(`Failed to load fallback page:`, fallbackError);
+          });
         }
       }
     });
@@ -96,10 +119,13 @@ export class WindowManager {
   showWindow(): void {
     if (!this.mainWindow || this._isVisible || this.mainWindow.isDestroyed()) return;
 
+    this.cancelAnimation();
+
     const { height: screenHeight } = this.deps.screen.getPrimaryDisplay().workAreaSize;
     const windowHeight = Math.floor(screenHeight * WINDOW_HEIGHT_RATIO);
 
     this._isVisible = true;
+    this._isAnimating = true;
 
     try {
       this.mainWindow.setPosition(0, -windowHeight);
@@ -108,9 +134,9 @@ export class WindowManager {
       const positions = calculateSlideDownPositions(windowHeight, ANIMATION_STEPS);
       let step = 0;
 
-      const slideInterval = setInterval(() => {
+      this.currentAnimationInterval = setInterval(() => {
         if (!this.mainWindow || this.mainWindow.isDestroyed()) {
-          clearInterval(slideInterval);
+          this.cancelAnimation();
           return;
         }
 
@@ -118,11 +144,11 @@ export class WindowManager {
           this.mainWindow.setPosition(0, positions[step]);
           step++;
           if (step >= positions.length) {
-            clearInterval(slideInterval);
+            this.cancelAnimation();
           }
         } catch (error) {
           console.error('Error during slide animation:', error);
-          clearInterval(slideInterval);
+          this.cancelAnimation();
         }
       }, ANIMATION_INTERVAL_MS);
 
@@ -130,24 +156,28 @@ export class WindowManager {
     } catch (error) {
       console.error('Error showing window:', error);
       this._isVisible = false;
+      this._isAnimating = false;
     }
   }
 
   hideWindow(): void {
     if (!this.mainWindow || !this._isVisible || this.mainWindow.isDestroyed()) return;
 
+    this.cancelAnimation();
+
     const { height: screenHeight } = this.deps.screen.getPrimaryDisplay().workAreaSize;
     const windowHeight = Math.floor(screenHeight * WINDOW_HEIGHT_RATIO);
 
     this._isVisible = false;
+    this._isAnimating = true;
 
     try {
       const positions = calculateSlideUpPositions(windowHeight, ANIMATION_STEPS);
       let step = 0;
 
-      const slideInterval = setInterval(() => {
+      this.currentAnimationInterval = setInterval(() => {
         if (!this.mainWindow || this.mainWindow.isDestroyed()) {
-          clearInterval(slideInterval);
+          this.cancelAnimation();
           return;
         }
 
@@ -155,14 +185,14 @@ export class WindowManager {
           this.mainWindow.setPosition(0, positions[step]);
           step++;
           if (step >= positions.length) {
-            clearInterval(slideInterval);
+            this.cancelAnimation();
             if (!this.mainWindow.isDestroyed()) {
               this.mainWindow.hide();
             }
           }
         } catch (error) {
           console.error('Error during hide animation:', error);
-          clearInterval(slideInterval);
+          this.cancelAnimation();
           if (this.mainWindow && !this.mainWindow.isDestroyed()) {
             this.mainWindow.hide();
           }
@@ -170,6 +200,7 @@ export class WindowManager {
       }, ANIMATION_INTERVAL_MS);
     } catch (error) {
       console.error('Error hiding window:', error);
+      this._isAnimating = false;
       if (this.mainWindow && !this.mainWindow.isDestroyed()) {
         this.mainWindow.hide();
       }
@@ -190,5 +221,13 @@ export class WindowManager {
 
   getWindow(): BrowserWindowType | null {
     return this.mainWindow;
+  }
+
+  private cancelAnimation(): void {
+    if (this.currentAnimationInterval !== null) {
+      clearInterval(this.currentAnimationInterval);
+      this.currentAnimationInterval = null;
+    }
+    this._isAnimating = false;
   }
 }

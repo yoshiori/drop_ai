@@ -1,6 +1,6 @@
 import { app, BrowserWindow, Menu, shell, globalShortcut, screen, session } from 'electron';
 import { WindowManager } from './windowManager';
-import { buildMenuTemplate } from './menuBuilder';
+import { buildMenuTemplate, MENU_IDS } from './menuBuilder';
 import { GEMINI_URL } from './constants';
 
 let windowManager: WindowManager;
@@ -8,30 +8,34 @@ let windowManager: WindowManager;
 function createMenu(): void {
   const template = buildMenuTemplate(process.platform, app.getName());
 
-  // Attach click handlers that reference the window manager
+  // Attach click handlers using stable menu item IDs
   const fileMenu = template.find((item) => item.label === 'File');
   if (fileMenu && Array.isArray(fileMenu.submenu)) {
     for (const item of fileMenu.submenu) {
-      switch (item.label) {
-        case 'Toggle Window':
+      switch (item.id) {
+        case MENU_IDS.TOGGLE_WINDOW:
           item.click = () => windowManager.toggleWindow();
           break;
-        case 'New Chat':
+        case MENU_IDS.NEW_CHAT:
           item.click = () => {
             const win = windowManager.getWindow();
-            if (win) win.loadURL(GEMINI_URL);
+            if (win) {
+              win.loadURL(GEMINI_URL).catch((error) => {
+                console.error('Failed to load URL from New Chat menu item:', error);
+              });
+            }
           };
           break;
-        case 'Reload':
+        case MENU_IDS.RELOAD:
           item.click = () => {
             const win = windowManager.getWindow();
             if (win) win.reload();
           };
           break;
-        case 'Hide Window':
+        case MENU_IDS.HIDE_WINDOW:
           item.click = () => windowManager.hideWindow();
           break;
-        case 'Quit':
+        case MENU_IDS.QUIT:
           item.click = () => app.quit();
           break;
       }
@@ -80,10 +84,21 @@ app.on('will-quit', () => {
   globalShortcut.unregisterAll();
 });
 
-// Security: Prevent new window creation
+// Security: Prevent new window creation with protocol validation
 app.on('web-contents-created', (_event, contents) => {
   contents.setWindowOpenHandler(({ url }) => {
-    shell.openExternal(url);
+    try {
+      const parsedUrl = new URL(url);
+      const allowedProtocols = new Set(['https:', 'http:']);
+
+      if (allowedProtocols.has(parsedUrl.protocol)) {
+        void shell.openExternal(url);
+      } else {
+        console.warn(`[security] Blocked attempt to open external URL with disallowed protocol: ${url}`);
+      }
+    } catch (error) {
+      console.warn(`[security] Failed to parse URL for external open: ${url}`, error);
+    }
     return { action: 'deny' };
   });
 });

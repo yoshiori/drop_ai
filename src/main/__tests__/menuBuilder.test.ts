@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildMenuTemplate } from '../menuBuilder';
+import { buildMenuTemplate, MENU_IDS } from '../menuBuilder';
 
 describe('buildMenuTemplate', () => {
   it('should return an array of menu items', () => {
@@ -17,11 +17,23 @@ describe('buildMenuTemplate', () => {
     expect(labels).toContain('Window');
   });
 
+  it('should assign stable IDs to File menu items', () => {
+    const template = buildMenuTemplate('linux');
+    const fileMenu = template.find((item) => item.label === 'File');
+    const submenu = fileMenu?.submenu as Electron.MenuItemConstructorOptions[];
+    const ids = submenu.map((item) => item.id).filter(Boolean);
+    expect(ids).toContain(MENU_IDS.TOGGLE_WINDOW);
+    expect(ids).toContain(MENU_IDS.NEW_CHAT);
+    expect(ids).toContain(MENU_IDS.RELOAD);
+    expect(ids).toContain(MENU_IDS.HIDE_WINDOW);
+    expect(ids).toContain(MENU_IDS.QUIT);
+  });
+
   it('should have Toggle Window with F12 accelerator in File menu', () => {
     const template = buildMenuTemplate('linux');
     const fileMenu = template.find((item) => item.label === 'File');
     const submenu = fileMenu?.submenu as Electron.MenuItemConstructorOptions[];
-    const toggleItem = submenu.find((item) => item.label === 'Toggle Window');
+    const toggleItem = submenu.find((item) => item.id === MENU_IDS.TOGGLE_WINDOW);
     expect(toggleItem?.accelerator).toBe('F12');
   });
 
@@ -29,7 +41,7 @@ describe('buildMenuTemplate', () => {
     const template = buildMenuTemplate('linux');
     const fileMenu = template.find((item) => item.label === 'File');
     const submenu = fileMenu?.submenu as Electron.MenuItemConstructorOptions[];
-    const quitItem = submenu.find((item) => item.label === 'Quit');
+    const quitItem = submenu.find((item) => item.id === MENU_IDS.QUIT);
     expect(quitItem?.accelerator).toBe('Ctrl+Q');
   });
 
@@ -37,7 +49,7 @@ describe('buildMenuTemplate', () => {
     const template = buildMenuTemplate('darwin');
     const fileMenu = template.find((item) => item.label === 'File');
     const submenu = fileMenu?.submenu as Electron.MenuItemConstructorOptions[];
-    const quitItem = submenu.find((item) => item.label === 'Quit');
+    const quitItem = submenu.find((item) => item.id === MENU_IDS.QUIT);
     expect(quitItem?.accelerator).toBe('Cmd+Q');
   });
 
@@ -60,7 +72,7 @@ describe('buildMenuTemplate', () => {
     const template = buildMenuTemplate('linux');
     const fileMenu = template.find((item) => item.label === 'File');
     const submenu = fileMenu?.submenu as Electron.MenuItemConstructorOptions[];
-    const newChat = submenu.find((item) => item.label === 'New Chat');
+    const newChat = submenu.find((item) => item.id === MENU_IDS.NEW_CHAT);
     expect(newChat?.accelerator).toBe('CmdOrCtrl+N');
   });
 
@@ -68,7 +80,7 @@ describe('buildMenuTemplate', () => {
     const template = buildMenuTemplate('linux');
     const fileMenu = template.find((item) => item.label === 'File');
     const submenu = fileMenu?.submenu as Electron.MenuItemConstructorOptions[];
-    const hideItem = submenu.find((item) => item.label === 'Hide Window');
+    const hideItem = submenu.find((item) => item.id === MENU_IDS.HIDE_WINDOW);
     expect(hideItem?.accelerator).toBe('Escape');
   });
 });

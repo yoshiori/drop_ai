@@ -25,6 +25,9 @@ function createMockBrowserWindow() {
       on: vi.fn(),
     },
     _listeners: listeners,
+    _emit(event: string) {
+      (listeners[event] || []).forEach((cb) => cb());
+    },
   };
 }
 
@@ -76,7 +79,7 @@ describe('WindowManager', () => {
       );
     });
 
-    it('should load Gemini URL in production', () => {
+    it('should load target URL in production', () => {
       const deps = createMockDeps();
       const wm = new WindowManager(deps);
       wm.createWindow();
@@ -118,6 +121,56 @@ describe('WindowManager', () => {
         }),
       );
     });
+
+    it('should set webSecurity to true', () => {
+      const deps = createMockDeps();
+      const wm = new WindowManager(deps);
+      wm.createWindow();
+
+      expect(deps.BrowserWindow).toHaveBeenCalledWith(
+        expect.objectContaining({
+          webPreferences: expect.objectContaining({
+            webSecurity: true,
+          }),
+        }),
+      );
+    });
+
+    it('should register closed event listener to clean up state', () => {
+      const deps = createMockDeps();
+      const wm = new WindowManager(deps);
+      wm.createWindow();
+
+      expect(deps.mockWindow.on).toHaveBeenCalledWith('closed', expect.any(Function));
+    });
+
+    it('should clean up state when window is closed', () => {
+      const deps = createMockDeps();
+      const wm = new WindowManager(deps);
+      wm.createWindow();
+      wm.showWindow();
+      expect(wm.isVisible()).toBe(true);
+
+      deps.mockWindow._emit('closed');
+
+      expect(wm.getWindow()).toBeNull();
+      expect(wm.isVisible()).toBe(false);
+    });
+
+    it('should validate URL protocol in setWindowOpenHandler', () => {
+      const deps = createMockDeps();
+      const wm = new WindowManager(deps);
+      wm.createWindow();
+
+      const handler = deps.mockWindow.webContents.setWindowOpenHandler.mock.calls[0][0];
+
+      handler({ url: 'https://example.com' });
+      expect(deps.shell.openExternal).toHaveBeenCalledWith('https://example.com');
+
+      (deps.shell.openExternal as ReturnType<typeof vi.fn>).mockClear();
+      handler({ url: 'file:///etc/passwd' });
+      expect(deps.shell.openExternal).not.toHaveBeenCalled();
+    });
   });
 
   describe('toggleWindow', () => {
@@ -147,7 +200,6 @@ describe('WindowManager', () => {
     it('should do nothing when window is not created', () => {
       const deps = createMockDeps();
       const wm = new WindowManager(deps);
-      // Don't create window
       wm.showWindow();
       expect(wm.isVisible()).toBe(false);
     });
@@ -189,11 +241,9 @@ describe('WindowManager', () => {
       wm.createWindow();
       wm.showWindow();
 
-      // Run all timers to complete animation
       vi.runAllTimers();
 
       expect(deps.mockWindow.setPosition).toHaveBeenCalled();
-      // Final position should be (0, 0)
       const calls = deps.mockWindow.setPosition.mock.calls;
       const lastCall = calls[calls.length - 1];
       expect(lastCall).toEqual([0, 0]);
@@ -224,7 +274,6 @@ describe('WindowManager', () => {
       deps.mockWindow.isDestroyed.mockReturnValue(true);
 
       wm.hideWindow();
-      // isVisible should remain true since hideWindow bails early
       expect(wm.isVisible()).toBe(true);
     });
 
@@ -235,6 +284,22 @@ describe('WindowManager', () => {
       wm.showWindow();
       vi.runAllTimers();
 
+      wm.hideWindow();
+      vi.runAllTimers();
+
+      expect(deps.mockWindow.hide).toHaveBeenCalled();
+      expect(wm.isVisible()).toBe(false);
+    });
+  });
+
+  describe('animation conflict prevention', () => {
+    it('should cancel ongoing show animation when hide is called', () => {
+      const deps = createMockDeps();
+      const wm = new WindowManager(deps);
+      wm.createWindow();
+      wm.showWindow();
+
+      // Don't complete animation, immediately hide
       wm.hideWindow();
       vi.runAllTimers();
 
