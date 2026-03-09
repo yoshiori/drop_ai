@@ -3,7 +3,7 @@ import {
   WINDOW_HEIGHT_RATIO,
   ANIMATION_STEPS,
   ANIMATION_INTERVAL_MS,
-  GEMINI_URL,
+  CLAUDE_URL,
   DEV_SERVER_URL,
 } from '../constants';
 
@@ -22,8 +22,8 @@ describe('constants', () => {
     expect(ANIMATION_INTERVAL_MS).toBeGreaterThan(0);
   });
 
-  it('GEMINI_URL should be a valid https URL', () => {
-    expect(GEMINI_URL).toMatch(/^https:\/\//);
+  it('CLAUDE_URL should be a valid https URL', () => {
+    expect(CLAUDE_URL).toMatch(/^https:\/\//);
   });
 
   it('DEV_SERVER_URL should be a localhost URL', () => {

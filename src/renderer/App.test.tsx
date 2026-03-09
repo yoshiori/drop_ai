@@ -5,7 +5,7 @@ import { App } from './index'; // Assuming App is a named export from index.tsx
 describe('App Component', () => {
   test('renders main heading', () => {
     render(<App />);
-    const headingElement = screen.getByText(/Gemini AI Desktop/i);
+    const headingElement = screen.getByText(/Claude AI Desktop/i);
     expect(headingElement).toBeInTheDocument();
   });
 });

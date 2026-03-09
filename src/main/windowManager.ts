@@ -1,6 +1,6 @@
 import type { BrowserWindow as BrowserWindowType, Screen, Shell } from 'electron';
 import * as path from 'path';
-import { WINDOW_HEIGHT_RATIO, ANIMATION_STEPS, ANIMATION_INTERVAL_MS, GEMINI_URL, DEV_SERVER_URL } from './constants';
+import { WINDOW_HEIGHT_RATIO, ANIMATION_STEPS, ANIMATION_INTERVAL_MS, CLAUDE_URL, DEV_SERVER_URL } from './constants';
 import { calculateSlideDownPositions, calculateSlideUpPositions } from './animation';
 
 export interface WindowManagerDeps {
@@ -30,7 +30,7 @@ export class WindowManager {
     const { width: screenWidth, height: screenHeight } = this.deps.screen.getPrimaryDisplay().workAreaSize;
     const windowHeight = Math.floor(screenHeight * WINDOW_HEIGHT_RATIO);
 
-    const persistentSession = this.deps.session.fromPartition('persist:gemini-session');
+    const persistentSession = this.deps.session.fromPartition('persist:claude-session');
 
     this.mainWindow = new this.deps.BrowserWindow({
       height: windowHeight,
@@ -71,7 +71,7 @@ export class WindowManager {
       this.cancelAnimation();
     });
 
-    const targetUrl = options.isDevelopment && options.useDevServer ? DEV_SERVER_URL : GEMINI_URL;
+    const targetUrl = options.isDevelopment && options.useDevServer ? DEV_SERVER_URL : CLAUDE_URL;
 
     this.mainWindow.loadURL(targetUrl).catch((error) => {
       console.error(`Failed to load ${targetUrl}:`, error);

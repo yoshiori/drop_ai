@@ -1,7 +1,7 @@
 import { app, BrowserWindow, Menu, shell, globalShortcut, screen, session } from 'electron';
 import { WindowManager } from './windowManager';
 import { buildMenuTemplate, MENU_IDS } from './menuBuilder';
-import { GEMINI_URL } from './constants';
+import { CLAUDE_URL } from './constants';
 
 let windowManager: WindowManager;
 
@@ -20,7 +20,7 @@ function createMenu(): void {
           item.click = () => {
             const win = windowManager.getWindow();
             if (win) {
-              win.loadURL(GEMINI_URL).catch((error) => {
+              win.loadURL(CLAUDE_URL).catch((error) => {
                 console.error('Failed to load URL from New Chat menu item:', error);
               });
             }

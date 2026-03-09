@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { WindowManager } from '../windowManager';
-import { WINDOW_HEIGHT_RATIO, GEMINI_URL, DEV_SERVER_URL } from '../constants';
+import { WINDOW_HEIGHT_RATIO, CLAUDE_URL, DEV_SERVER_URL } from '../constants';
 
 function createMockBrowserWindow() {
   const listeners: Record<string, Function[]> = {};
@@ -84,7 +84,7 @@ describe('WindowManager', () => {
       const wm = new WindowManager(deps);
       wm.createWindow();
 
-      expect(deps.mockWindow.loadURL).toHaveBeenCalledWith(GEMINI_URL);
+      expect(deps.mockWindow.loadURL).toHaveBeenCalledWith(CLAUDE_URL);
     });
 
     it('should load dev server URL in development', () => {

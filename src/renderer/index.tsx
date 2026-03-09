@@ -18,7 +18,7 @@ export const App: React.FC = () => {
   }, []);
 
   const handleRetry = () => {
-    window.location.href = 'https://gemini.google.com/app';
+    window.location.href = 'https://claude.ai/new';
   };
 
   return (
@@ -30,7 +30,7 @@ export const App: React.FC = () => {
       margin: '0 auto',
       lineHeight: '1.6'
     }}>
-      <h1 style={{ color: '#1a73e8', marginBottom: '20px' }}>Gemini AI Desktop</h1>
+      <h1 style={{ color: '#1a73e8', marginBottom: '20px' }}>Claude AI Desktop</h1>
 
       <div style={{
         background: isOnline ? '#e8f5e8' : '#ffebee',
@@ -44,7 +44,7 @@ export const App: React.FC = () => {
       </div>
 
       <p style={{ fontSize: '18px', marginBottom: '30px' }}>
-        Unable to load Gemini AI. This could be due to:
+        Unable to load Claude AI. This could be due to:
       </p>
 
       <ul style={{
@@ -55,7 +55,7 @@ export const App: React.FC = () => {
         padding: '0'
       }}>
         <li style={{ marginBottom: '10px' }}>• Network connectivity issues</li>
-        <li style={{ marginBottom: '10px' }}>• Gemini AI service temporarily unavailable</li>
+        <li style={{ marginBottom: '10px' }}>• Claude AI service temporarily unavailable</li>
         <li style={{ marginBottom: '10px' }}>• Firewall or proxy restrictions</li>
       </ul>
 
@@ -79,7 +79,7 @@ export const App: React.FC = () => {
         </button>
 
         <button
-          onClick={() => window.open('https://gemini.google.com/app', '_blank')}
+          onClick={() => window.open('https://claude.ai/new', '_blank')}
           style={{
             background: 'transparent',
             color: '#1a73e8',
