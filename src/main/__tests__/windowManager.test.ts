@@ -157,43 +157,42 @@ describe('WindowManager', () => {
       expect(wm.isVisible()).toBe(false);
     });
 
-    it('should validate URL protocol in setWindowOpenHandler', () => {
+    it('should register setWindowOpenHandler', () => {
       const deps = createMockDeps();
       const wm = new WindowManager(deps);
       wm.createWindow();
 
-      const handler = deps.mockWindow.webContents.setWindowOpenHandler.mock.calls[0][0];
-
-      handler({ url: 'https://example.com' });
-      expect(deps.shell.openExternal).toHaveBeenCalledWith('https://example.com');
-
-      (deps.shell.openExternal as ReturnType<typeof vi.fn>).mockClear();
-      handler({ url: 'file:///etc/passwd' });
-      expect(deps.shell.openExternal).not.toHaveBeenCalled();
+      expect(deps.mockWindow.webContents.setWindowOpenHandler).toHaveBeenCalledWith(expect.any(Function));
     });
 
-    it('should allow auth domain URLs to open in-app', () => {
+    it('should load fallback HTML on did-fail-load', () => {
       const deps = createMockDeps();
       const wm = new WindowManager(deps);
       wm.createWindow();
 
-      const handler = deps.mockWindow.webContents.setWindowOpenHandler.mock.calls[0][0];
+      const didFailLoadHandler = deps.mockWindow.webContents.on.mock.calls.find(
+        (call: unknown[]) => call[0] === 'did-fail-load',
+      )?.[1] as Function;
 
-      const result = handler({ url: 'https://accounts.google.com/o/oauth2/auth?client_id=123' });
-      expect(result).toEqual({ action: 'allow' });
-      expect(deps.shell.openExternal).not.toHaveBeenCalled();
+      didFailLoadHandler({}, -6, 'ERR_CONNECTION_REFUSED', 'https://claude.ai/new');
+
+      expect(deps.mockWindow.loadFile).toHaveBeenCalled();
     });
 
-    it('should deny non-auth URLs and open them externally', () => {
+    it('should ignore did-fail-load with errorCode -3 (aborted)', () => {
       const deps = createMockDeps();
       const wm = new WindowManager(deps);
       wm.createWindow();
 
-      const handler = deps.mockWindow.webContents.setWindowOpenHandler.mock.calls[0][0];
+      deps.mockWindow.loadFile.mockClear();
 
-      const result = handler({ url: 'https://example.com' });
-      expect(result).toEqual({ action: 'deny' });
-      expect(deps.shell.openExternal).toHaveBeenCalledWith('https://example.com');
+      const didFailLoadHandler = deps.mockWindow.webContents.on.mock.calls.find(
+        (call: unknown[]) => call[0] === 'did-fail-load',
+      )?.[1] as Function;
+
+      didFailLoadHandler({}, -3, 'ERR_ABORTED', 'https://claude.ai/new');
+
+      expect(deps.mockWindow.loadFile).not.toHaveBeenCalled();
     });
   });
 

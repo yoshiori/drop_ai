@@ -1,6 +1,7 @@
 import type { BrowserWindow as BrowserWindowType, Screen, Shell } from 'electron';
 import * as path from 'path';
-import { WINDOW_HEIGHT_RATIO, ANIMATION_STEPS, ANIMATION_INTERVAL_MS, CLAUDE_URL, DEV_SERVER_URL, AUTH_DOMAINS } from './constants';
+import { WINDOW_HEIGHT_RATIO, ANIMATION_STEPS, ANIMATION_INTERVAL_MS, CLAUDE_URL, DEV_SERVER_URL } from './constants';
+import { createWindowOpenHandler } from './windowOpenHandler';
 import { calculateSlideDownPositions, calculateSlideUpPositions } from './animation';
 
 export interface WindowManagerDeps {
@@ -87,25 +88,7 @@ export class WindowManager {
       this.mainWindow.webContents.openDevTools();
     }
 
-    this.mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-      try {
-        const parsedUrl = new URL(url);
-        const allowedProtocols = new Set(['https:', 'http:']);
-
-        if (AUTH_DOMAINS.has(parsedUrl.hostname)) {
-          return { action: 'allow' };
-        }
-
-        if (allowedProtocols.has(parsedUrl.protocol)) {
-          void this.deps.shell.openExternal(url);
-        } else {
-          console.warn(`[security] Blocked attempt to open external URL with disallowed protocol: ${url}`);
-        }
-      } catch (error) {
-        console.warn(`[security] Failed to parse URL for external open: ${url}`, error);
-      }
-      return { action: 'deny' };
-    });
+    this.mainWindow.webContents.setWindowOpenHandler(createWindowOpenHandler(this.deps.shell));
 
     this.mainWindow.webContents.on('did-fail-load', (_event: unknown, errorCode: number, errorDescription: string, validatedURL: string) => {
       if (errorCode !== -3) {

@@ -1,7 +1,8 @@
 import { app, BrowserWindow, Menu, shell, globalShortcut, screen, session } from 'electron';
 import { WindowManager } from './windowManager';
 import { buildMenuTemplate, MENU_IDS } from './menuBuilder';
-import { CLAUDE_URL, AUTH_DOMAINS } from './constants';
+import { CLAUDE_URL } from './constants';
+import { createWindowOpenHandler } from './windowOpenHandler';
 
 let windowManager: WindowManager;
 
@@ -86,25 +87,7 @@ app.on('will-quit', () => {
 
 // Security: Prevent new window creation with protocol validation
 app.on('web-contents-created', (_event, contents) => {
-  contents.setWindowOpenHandler(({ url }) => {
-    try {
-      const parsedUrl = new URL(url);
-      const allowedProtocols = new Set(['https:', 'http:']);
-
-      if (AUTH_DOMAINS.has(parsedUrl.hostname)) {
-        return { action: 'allow' };
-      }
-
-      if (allowedProtocols.has(parsedUrl.protocol)) {
-        void shell.openExternal(url);
-      } else {
-        console.warn(`[security] Blocked attempt to open external URL with disallowed protocol: ${url}`);
-      }
-    } catch (error) {
-      console.warn(`[security] Failed to parse URL for external open: ${url}`, error);
-    }
-    return { action: 'deny' };
-  });
+  contents.setWindowOpenHandler(createWindowOpenHandler(shell));
 });
 
 if (process.env.NODE_ENV !== 'test') {
