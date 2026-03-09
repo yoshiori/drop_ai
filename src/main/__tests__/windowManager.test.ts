@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { WindowManager } from '../windowManager';
-import { WINDOW_HEIGHT_RATIO, GEMINI_URL, DEV_SERVER_URL } from '../constants';
+import { WINDOW_HEIGHT_RATIO, CLAUDE_URL, DEV_SERVER_URL } from '../constants';
 
 function createMockBrowserWindow() {
   const listeners: Record<string, Function[]> = {};
@@ -45,9 +45,6 @@ function createMockDeps(overrides: Record<string, unknown> = {}) {
     session: {
       fromPartition: vi.fn().mockReturnValue({}),
     } as unknown as typeof Electron.session,
-    shell: {
-      openExternal: vi.fn(),
-    } as unknown as typeof Electron.shell,
     mockWindow,
     ...overrides,
   };
@@ -84,7 +81,7 @@ describe('WindowManager', () => {
       const wm = new WindowManager(deps);
       wm.createWindow();
 
-      expect(deps.mockWindow.loadURL).toHaveBeenCalledWith(GEMINI_URL);
+      expect(deps.mockWindow.loadURL).toHaveBeenCalledWith(CLAUDE_URL);
     });
 
     it('should load dev server URL in development', () => {
@@ -157,19 +154,34 @@ describe('WindowManager', () => {
       expect(wm.isVisible()).toBe(false);
     });
 
-    it('should validate URL protocol in setWindowOpenHandler', () => {
+    it('should load fallback HTML on did-fail-load', () => {
       const deps = createMockDeps();
       const wm = new WindowManager(deps);
       wm.createWindow();
 
-      const handler = deps.mockWindow.webContents.setWindowOpenHandler.mock.calls[0][0];
+      const didFailLoadHandler = deps.mockWindow.webContents.on.mock.calls.find(
+        (call: unknown[]) => call[0] === 'did-fail-load',
+      )?.[1] as Function;
 
-      handler({ url: 'https://example.com' });
-      expect(deps.shell.openExternal).toHaveBeenCalledWith('https://example.com');
+      didFailLoadHandler({}, -6, 'ERR_CONNECTION_REFUSED', 'https://claude.ai/new');
 
-      (deps.shell.openExternal as ReturnType<typeof vi.fn>).mockClear();
-      handler({ url: 'file:///etc/passwd' });
-      expect(deps.shell.openExternal).not.toHaveBeenCalled();
+      expect(deps.mockWindow.loadFile).toHaveBeenCalled();
+    });
+
+    it('should ignore did-fail-load with errorCode -3 (aborted)', () => {
+      const deps = createMockDeps();
+      const wm = new WindowManager(deps);
+      wm.createWindow();
+
+      deps.mockWindow.loadFile.mockClear();
+
+      const didFailLoadHandler = deps.mockWindow.webContents.on.mock.calls.find(
+        (call: unknown[]) => call[0] === 'did-fail-load',
+      )?.[1] as Function;
+
+      didFailLoadHandler({}, -3, 'ERR_ABORTED', 'https://claude.ai/new');
+
+      expect(deps.mockWindow.loadFile).not.toHaveBeenCalled();
     });
   });
 

@@ -1,7 +1,8 @@
 import { app, BrowserWindow, Menu, shell, globalShortcut, screen, session } from 'electron';
 import { WindowManager } from './windowManager';
 import { buildMenuTemplate, MENU_IDS } from './menuBuilder';
-import { GEMINI_URL } from './constants';
+import { CLAUDE_URL } from './constants';
+import { createWindowOpenHandler } from './windowOpenHandler';
 
 let windowManager: WindowManager;
 
@@ -20,7 +21,7 @@ function createMenu(): void {
           item.click = () => {
             const win = windowManager.getWindow();
             if (win) {
-              win.loadURL(GEMINI_URL).catch((error) => {
+              win.loadURL(CLAUDE_URL).catch((error) => {
                 console.error('Failed to load URL from New Chat menu item:', error);
               });
             }
@@ -48,7 +49,7 @@ function createMenu(): void {
 
 function initialize(): void {
   app.whenReady().then(() => {
-    windowManager = new WindowManager({ BrowserWindow, screen, session, shell });
+    windowManager = new WindowManager({ BrowserWindow, screen, session });
     windowManager.createWindow({
       isDevelopment: process.env.NODE_ENV === 'development',
       useDevServer: !!process.env.VITE_DEV_SERVER,
@@ -86,21 +87,7 @@ app.on('will-quit', () => {
 
 // Security: Prevent new window creation with protocol validation
 app.on('web-contents-created', (_event, contents) => {
-  contents.setWindowOpenHandler(({ url }) => {
-    try {
-      const parsedUrl = new URL(url);
-      const allowedProtocols = new Set(['https:', 'http:']);
-
-      if (allowedProtocols.has(parsedUrl.protocol)) {
-        void shell.openExternal(url);
-      } else {
-        console.warn(`[security] Blocked attempt to open external URL with disallowed protocol: ${url}`);
-      }
-    } catch (error) {
-      console.warn(`[security] Failed to parse URL for external open: ${url}`, error);
-    }
-    return { action: 'deny' };
-  });
+  contents.setWindowOpenHandler(createWindowOpenHandler(shell));
 });
 
 if (process.env.NODE_ENV !== 'test') {
