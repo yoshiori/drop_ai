@@ -1,7 +1,7 @@
 import { app, BrowserWindow, Menu, shell, globalShortcut, screen, session } from 'electron';
 import { WindowManager } from './windowManager';
 import { buildMenuTemplate, MENU_IDS } from './menuBuilder';
-import { CLAUDE_URL } from './constants';
+import { CLAUDE_URL, AUTH_DOMAINS } from './constants';
 
 let windowManager: WindowManager;
 
@@ -90,6 +90,10 @@ app.on('web-contents-created', (_event, contents) => {
     try {
       const parsedUrl = new URL(url);
       const allowedProtocols = new Set(['https:', 'http:']);
+
+      if (AUTH_DOMAINS.has(parsedUrl.hostname)) {
+        return { action: 'allow' };
+      }
 
       if (allowedProtocols.has(parsedUrl.protocol)) {
         void shell.openExternal(url);

@@ -171,6 +171,30 @@ describe('WindowManager', () => {
       handler({ url: 'file:///etc/passwd' });
       expect(deps.shell.openExternal).not.toHaveBeenCalled();
     });
+
+    it('should allow auth domain URLs to open in-app', () => {
+      const deps = createMockDeps();
+      const wm = new WindowManager(deps);
+      wm.createWindow();
+
+      const handler = deps.mockWindow.webContents.setWindowOpenHandler.mock.calls[0][0];
+
+      const result = handler({ url: 'https://accounts.google.com/o/oauth2/auth?client_id=123' });
+      expect(result).toEqual({ action: 'allow' });
+      expect(deps.shell.openExternal).not.toHaveBeenCalled();
+    });
+
+    it('should deny non-auth URLs and open them externally', () => {
+      const deps = createMockDeps();
+      const wm = new WindowManager(deps);
+      wm.createWindow();
+
+      const handler = deps.mockWindow.webContents.setWindowOpenHandler.mock.calls[0][0];
+
+      const result = handler({ url: 'https://example.com' });
+      expect(result).toEqual({ action: 'deny' });
+      expect(deps.shell.openExternal).toHaveBeenCalledWith('https://example.com');
+    });
   });
 
   describe('toggleWindow', () => {

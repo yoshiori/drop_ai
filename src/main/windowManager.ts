@@ -1,6 +1,6 @@
 import type { BrowserWindow as BrowserWindowType, Screen, Shell } from 'electron';
 import * as path from 'path';
-import { WINDOW_HEIGHT_RATIO, ANIMATION_STEPS, ANIMATION_INTERVAL_MS, CLAUDE_URL, DEV_SERVER_URL } from './constants';
+import { WINDOW_HEIGHT_RATIO, ANIMATION_STEPS, ANIMATION_INTERVAL_MS, CLAUDE_URL, DEV_SERVER_URL, AUTH_DOMAINS } from './constants';
 import { calculateSlideDownPositions, calculateSlideUpPositions } from './animation';
 
 export interface WindowManagerDeps {
@@ -91,6 +91,10 @@ export class WindowManager {
       try {
         const parsedUrl = new URL(url);
         const allowedProtocols = new Set(['https:', 'http:']);
+
+        if (AUTH_DOMAINS.has(parsedUrl.hostname)) {
+          return { action: 'allow' };
+        }
 
         if (allowedProtocols.has(parsedUrl.protocol)) {
           void this.deps.shell.openExternal(url);
