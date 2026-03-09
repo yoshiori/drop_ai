@@ -16,7 +16,7 @@ function createMockDeps(overrides: Record<string, unknown> = {}) {
   const MockTray = vi.fn().mockReturnValue(mockTray);
   const mockMenu = { buildFromTemplate: vi.fn().mockReturnValue({}) };
   const mockNativeImage = {
-    createFromDataURL: vi.fn().mockReturnValue('mock-icon'),
+    createFromPath: vi.fn().mockReturnValue('mock-icon'),
   };
 
   return {
@@ -49,7 +49,7 @@ describe('TrayManager', () => {
       const { tm, deps } = createTrayManager();
       tm.createTray();
 
-      expect(deps.nativeImage.createFromDataURL).toHaveBeenCalled();
+      expect(deps.nativeImage.createFromPath).toHaveBeenCalled();
       expect(deps.Tray).toHaveBeenCalledWith('mock-icon');
     });
 

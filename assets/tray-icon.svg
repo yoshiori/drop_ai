@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- Down-pointing chevron representing "drop" -->
+  <polyline points="12,20 32,44 52,20" fill="none" stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Dot beneath representing AI/cursor -->
+  <circle cx="32" cy="54" r="4" fill="white"/>
+</svg>

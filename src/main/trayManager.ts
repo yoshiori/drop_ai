@@ -1,4 +1,5 @@
 import type { Tray as TrayType, Menu as MenuType, nativeImage as nativeImageType } from 'electron';
+import * as path from 'path';
 
 export interface TrayManagerDeps {
   Tray: typeof TrayType;
@@ -12,12 +13,6 @@ export interface TrayManagerCallbacks {
   onQuit: () => void;
 }
 
-// 16x16 simple "D" icon as a data URL (white on transparent)
-const TRAY_ICON_DATA_URL =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAA' +
-  'QklEQVQ4y2P4z8BQz0BAwMDAwMDEQCJgGDUAAYi1GBj+MzD8Z2D4D8T/Gf4zMPwH0v8Z' +
-  'GP4z/GdgYBg1AAEADO4HERAiKaAAAAAASUVORK5CYII=';
-
 export class TrayManager {
   private tray: TrayType | null = null;
   private deps: TrayManagerDeps;
@@ -29,7 +24,8 @@ export class TrayManager {
   }
 
   createTray(): void {
-    const icon = this.deps.nativeImage.createFromDataURL(TRAY_ICON_DATA_URL);
+    const iconPath = path.join(__dirname, '../../assets/tray-icon-22.png');
+    const icon = this.deps.nativeImage.createFromPath(iconPath);
     this.tray = new this.deps.Tray(icon);
     this.tray.setToolTip('DropAI');
 
