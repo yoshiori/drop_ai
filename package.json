@@ -19,7 +19,10 @@
     "dist:linux-portable": "npm run build && electron-builder --linux appimage deb",
     "dist:win": "npm run build && electron-builder --win",
     "dist:mac": "npm run build && electron-builder --mac",
-    "test": "vitest",
+    "test": "vitest run --config vitest.config.main.ts && vitest run",
+    "test:watch": "vitest --config vitest.config.main.ts",
+    "test:main": "vitest run --config vitest.config.main.ts",
+    "test:renderer": "vitest run",
     "test:ui": "vitest --ui"
   },
   "keywords": [
