@@ -1,10 +1,12 @@
-import { app, BrowserWindow, Menu, shell, globalShortcut, screen, session } from 'electron';
+import { app, BrowserWindow, Menu, Tray, nativeImage, shell, globalShortcut, screen, session } from 'electron';
 import { WindowManager } from './windowManager';
+import { TrayManager } from './trayManager';
 import { buildMenuTemplate, MENU_IDS } from './menuBuilder';
 import { CLAUDE_URL } from './constants';
 import { createWindowOpenHandler } from './windowOpenHandler';
 
 let windowManager: WindowManager;
+let trayManager: TrayManager;
 
 function createMenu(): void {
   const template = buildMenuTemplate(process.platform, app.getName());
@@ -56,6 +58,20 @@ function initialize(): void {
     });
 
     createMenu();
+
+    trayManager = new TrayManager({ Tray, Menu, nativeImage }, {
+      onToggleWindow: () => windowManager.toggleWindow(),
+      onNewChat: () => {
+        const win = windowManager.getWindow();
+        if (win) {
+          win.loadURL(CLAUDE_URL).catch((error) => {
+            console.error('Failed to load URL from tray New Chat:', error);
+          });
+        }
+      },
+      onQuit: () => app.quit(),
+    });
+    trayManager.createTray();
 
     const registered = globalShortcut.register('F12', () => {
       windowManager.toggleWindow();
