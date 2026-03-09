@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.1](https://github.com/yoshiori/drop_ai/compare/v1.3.0...v1.3.1) (2026-03-09)
+
+
+### Bug Fixes
+
+* correct TypeScript output directory for shared constants ([f193bb7](https://github.com/yoshiori/drop_ai/commit/f193bb760348b5b3dfa05a4c77c9234fe14b34ba))
+* correct TypeScript output directory for shared constants ([8e6716c](https://github.com/yoshiori/drop_ai/commit/8e6716caa1f232cd88b6cdf8d062a898ee3bfd18))
+
 ## [1.3.0](https://github.com/yoshiori/drop_ai/compare/v1.2.1...v1.3.0) (2026-03-09)
 
 
