@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
+import { CLAUDE_URL } from '../shared/constants';
+
+const BRAND_COLOR = '#1a73e8';
+const BRAND_COLOR_HOVER = '#1557b0';
 
 export const App: React.FC = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -18,7 +22,7 @@ export const App: React.FC = () => {
   }, []);
 
   const handleRetry = () => {
-    window.location.href = 'https://claude.ai/new';
+    window.location.href = CLAUDE_URL;
   };
 
   return (
@@ -30,7 +34,7 @@ export const App: React.FC = () => {
       margin: '0 auto',
       lineHeight: '1.6'
     }}>
-      <h1 style={{ color: '#1a73e8', marginBottom: '20px' }}>Claude AI Desktop</h1>
+      <h1 style={{ color: BRAND_COLOR, marginBottom: '20px' }}>Claude AI Desktop</h1>
 
       <div style={{
         background: isOnline ? '#e8f5e8' : '#ffebee',
@@ -63,7 +67,7 @@ export const App: React.FC = () => {
         <button
           onClick={handleRetry}
           style={{
-            background: '#1a73e8',
+            background: BRAND_COLOR,
             color: 'white',
             border: 'none',
             padding: '12px 24px',
@@ -72,18 +76,18 @@ export const App: React.FC = () => {
             cursor: 'pointer',
             marginRight: '10px'
           }}
-          onMouseOver={(e) => e.currentTarget.style.background = '#1557b0'}
-          onMouseOut={(e) => e.currentTarget.style.background = '#1a73e8'}
+          onMouseOver={(e) => e.currentTarget.style.background = BRAND_COLOR_HOVER}
+          onMouseOut={(e) => e.currentTarget.style.background = BRAND_COLOR}
         >
           Retry Connection
         </button>
 
         <button
-          onClick={() => window.open('https://claude.ai/new', '_blank')}
+          onClick={() => window.open(CLAUDE_URL, '_blank')}
           style={{
             background: 'transparent',
-            color: '#1a73e8',
-            border: '1px solid #1a73e8',
+            color: BRAND_COLOR,
+            border: `1px solid ${BRAND_COLOR}`,
             padding: '12px 24px',
             borderRadius: '6px',
             fontSize: '16px',

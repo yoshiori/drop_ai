@@ -45,9 +45,6 @@ function createMockDeps(overrides: Record<string, unknown> = {}) {
     session: {
       fromPartition: vi.fn().mockReturnValue({}),
     } as unknown as typeof Electron.session,
-    shell: {
-      openExternal: vi.fn(),
-    } as unknown as typeof Electron.shell,
     mockWindow,
     ...overrides,
   };
@@ -155,14 +152,6 @@ describe('WindowManager', () => {
 
       expect(wm.getWindow()).toBeNull();
       expect(wm.isVisible()).toBe(false);
-    });
-
-    it('should register setWindowOpenHandler', () => {
-      const deps = createMockDeps();
-      const wm = new WindowManager(deps);
-      wm.createWindow();
-
-      expect(deps.mockWindow.webContents.setWindowOpenHandler).toHaveBeenCalledWith(expect.any(Function));
     });
 
     it('should load fallback HTML on did-fail-load', () => {

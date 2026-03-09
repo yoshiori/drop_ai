@@ -49,7 +49,7 @@ function createMenu(): void {
 
 function initialize(): void {
   app.whenReady().then(() => {
-    windowManager = new WindowManager({ BrowserWindow, screen, session, shell });
+    windowManager = new WindowManager({ BrowserWindow, screen, session });
     windowManager.createWindow({
       isDevelopment: process.env.NODE_ENV === 'development',
       useDevServer: !!process.env.VITE_DEV_SERVER,

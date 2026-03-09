@@ -1,14 +1,13 @@
-import type { BrowserWindow as BrowserWindowType, Screen, Shell } from 'electron';
+import type { BrowserWindow as BrowserWindowType, Screen } from 'electron';
 import * as path from 'path';
 import { WINDOW_HEIGHT_RATIO, ANIMATION_STEPS, ANIMATION_INTERVAL_MS, CLAUDE_URL, DEV_SERVER_URL } from './constants';
-import { createWindowOpenHandler } from './windowOpenHandler';
+
 import { calculateSlideDownPositions, calculateSlideUpPositions } from './animation';
 
 export interface WindowManagerDeps {
   BrowserWindow: typeof BrowserWindowType;
   screen: Screen;
   session: typeof Electron.session;
-  shell: Shell;
 }
 
 export interface CreateWindowOptions {
@@ -87,8 +86,6 @@ export class WindowManager {
     if (options.isDevelopment) {
       this.mainWindow.webContents.openDevTools();
     }
-
-    this.mainWindow.webContents.setWindowOpenHandler(createWindowOpenHandler(this.deps.shell));
 
     this.mainWindow.webContents.on('did-fail-load', (_event: unknown, errorCode: number, errorDescription: string, validatedURL: string) => {
       if (errorCode !== -3) {
