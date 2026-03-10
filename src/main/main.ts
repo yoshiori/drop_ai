@@ -17,6 +17,11 @@ function handleNewChat(): void {
   }
 }
 
+function handleReload(): void {
+  const win = windowManager.getWindow();
+  if (win) win.reload();
+}
+
 function createMenu(): void {
   const template = buildMenuTemplate(process.platform, app.getName());
 
@@ -32,10 +37,7 @@ function createMenu(): void {
           item.click = () => handleNewChat();
           break;
         case MENU_IDS.RELOAD:
-          item.click = () => {
-            const win = windowManager.getWindow();
-            if (win) win.reload();
-          };
+          item.click = () => handleReload();
           break;
         case MENU_IDS.HIDE_WINDOW:
           item.click = () => windowManager.hideWindow();
@@ -64,6 +66,7 @@ function initialize(): void {
     trayManager = new TrayManager({ Tray, Menu, nativeImage }, {
       onToggleWindow: () => windowManager.toggleWindow(),
       onNewChat: handleNewChat,
+      onReload: handleReload,
       onQuit: () => app.quit(),
     });
     trayManager.createTray();
