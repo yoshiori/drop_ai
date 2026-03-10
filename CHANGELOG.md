@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.1](https://github.com/yoshiori/drop_ai/compare/v1.5.0...v1.5.1) (2026-03-10)
+
+
+### Bug Fixes
+
+* resolve TypeScript error for Function type in test callbacks ([2923057](https://github.com/yoshiori/drop_ai/commit/29230570b551be5cd3978705f841c4b011292105))
+* resolve TypeScript error for Function type in test callbacks ([d1c1eaa](https://github.com/yoshiori/drop_ai/commit/d1c1eaa24861a870adbb0d7f6485a11b6f508f18))
+
 ## [1.5.0](https://github.com/yoshiori/drop_ai/compare/v1.4.0...v1.5.0) (2026-03-10)
 
 
