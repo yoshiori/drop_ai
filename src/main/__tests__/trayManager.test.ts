@@ -29,7 +29,7 @@ function createMockDeps(overrides: Record<string, unknown> = {}) {
 }
 
 describe('TrayManager', () => {
-  let callbacks: Record<string, Function>;
+  let callbacks: Record<string, () => void>;
 
   beforeEach(() => {
     callbacks = {};
