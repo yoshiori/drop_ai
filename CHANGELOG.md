@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.0](https://github.com/yoshiori/drop_ai/compare/v1.4.0...v1.5.0) (2026-03-10)
+
+
+### Features
+
+* add Reload action to system tray menu ([df09f7f](https://github.com/yoshiori/drop_ai/commit/df09f7f3e2020cb0b45c393824a6f58d441271bb))
+* add Reload action to system tray menu ([3136771](https://github.com/yoshiori/drop_ai/commit/31367710b50f2e6a8e8860a0a6bd6ea17bb50ce2))
+
 ## [1.4.0](https://github.com/yoshiori/drop_ai/compare/v1.3.1...v1.4.0) (2026-03-10)
 
 
