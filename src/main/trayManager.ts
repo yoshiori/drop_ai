@@ -10,6 +10,7 @@ export interface TrayManagerDeps {
 export interface TrayManagerCallbacks {
   onToggleWindow: () => void;
   onNewChat: () => void;
+  onReload: () => void;
   onQuit: () => void;
 }
 
@@ -37,6 +38,10 @@ export class TrayManager {
       {
         label: 'New Chat',
         click: () => this.callbacks.onNewChat(),
+      },
+      {
+        label: 'Reload',
+        click: () => this.callbacks.onReload(),
       },
       { type: 'separator' },
       {

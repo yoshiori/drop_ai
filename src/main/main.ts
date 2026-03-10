@@ -64,6 +64,10 @@ function initialize(): void {
     trayManager = new TrayManager({ Tray, Menu, nativeImage }, {
       onToggleWindow: () => windowManager.toggleWindow(),
       onNewChat: handleNewChat,
+      onReload: () => {
+        const win = windowManager.getWindow();
+        if (win) win.reload();
+      },
       onQuit: () => app.quit(),
     });
     trayManager.createTray();

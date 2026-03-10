@@ -39,6 +39,7 @@ describe('TrayManager', () => {
     const tm = new TrayManager(deps, {
       onToggleWindow: callbacks.toggleWindow || vi.fn(),
       onNewChat: callbacks.newChat || vi.fn(),
+      onReload: callbacks.reload || vi.fn(),
       onQuit: callbacks.quit || vi.fn(),
     });
     return { tm, deps };
@@ -70,7 +71,7 @@ describe('TrayManager', () => {
     it('should build context menu with correct items', () => {
       const template = (deps.Menu.buildFromTemplate as ReturnType<typeof vi.fn>).mock.calls[0][0];
       const labels = template.map((item: { label?: string; type?: string }) => item.label || item.type);
-      expect(labels).toEqual(['Toggle Window', 'New Chat', 'separator', 'Quit']);
+      expect(labels).toEqual(['Toggle Window', 'New Chat', 'Reload', 'separator', 'Quit']);
     });
   });
 
@@ -78,6 +79,7 @@ describe('TrayManager', () => {
     it.each([
       { label: 'Toggle Window', callbackName: 'toggleWindow' },
       { label: 'New Chat', callbackName: 'newChat' },
+      { label: 'Reload', callbackName: 'reload' },
       { label: 'Quit', callbackName: 'quit' },
     ])('should call callback for "$label"', ({ label, callbackName }) => {
       const callbackFn = vi.fn();
