@@ -1,6 +1,6 @@
 {
   "name": "drop_ai",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "DropAI - AI Desktop Assistant with Top-Down Terminal Style",
   "main": "dist/main/main.js",
   "scripts": {
