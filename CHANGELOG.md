@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.4.0](https://github.com/yoshiori/drop_ai/compare/v1.3.1...v1.4.0) (2026-03-10)
+
+
+### Features
+
+* add .tool-versions for Node.js version management ([0f4e472](https://github.com/yoshiori/drop_ai/commit/0f4e472c19bb7ab98a8e7be42c1c0c2a2329f34f))
+* add .tool-versions for Node.js version management ([75c9840](https://github.com/yoshiori/drop_ai/commit/75c9840c5eb0354c7e14740d8b38a5010e08fabd))
+* add proper tray icon (drop chevron + dot design) ([d7dc8b1](https://github.com/yoshiori/drop_ai/commit/d7dc8b1e07a2f88ee1527b38e73d3fef9f22c44d))
+* add system tray icon for app visibility ([46851d8](https://github.com/yoshiori/drop_ai/commit/46851d8b7664ab3be0e1539070942d72125ebee1))
+* add system tray icon for app visibility ([7354672](https://github.com/yoshiori/drop_ai/commit/73546720edf3305a235916e99e5c55f359bf7bfc))
+
 ## [1.3.1](https://github.com/yoshiori/drop_ai/compare/v1.3.0...v1.3.1) (2026-03-09)
 
 
